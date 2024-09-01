@@ -1,0 +1,18 @@
+1. error-expected-content-key-de1e4a02ec63c4eb-to-exist-getting-this-error-in-react - parcel
+sol:
+Deleting .parcel-cache folder works fine.(manually)
+
+Instead of every time deleting it manually, you can simply add rm -rf .parcel-cache && before your start, dev or build command in package.json.
+
+package.json
+{
+  ...
+  "scripts": {
+    "start": "rm -rf .parcel-cache && parcel index.html",      (it ll remove parcel cache also and then make ur build)
+    "build": "rm -rf .parcel-cache && parcel build index.html"
+  }
+  ...
+}
+
+
+2.

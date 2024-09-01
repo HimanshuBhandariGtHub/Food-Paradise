@@ -4,6 +4,6 @@
     box-sizing: border-box;
     font-family: 'Courier New', Courier, monospace;
 }
-#root{
-    background-color: red;
+.firstDiv{
+    color:red;
 }
