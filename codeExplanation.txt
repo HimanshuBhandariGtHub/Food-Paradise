@@ -1,0 +1,54 @@
++++++++++++++++++static data of card with img and some headings
+const RestaurantCard =()=>{
+    return(
+        <div className="res-card" style={{backgroundColor:"#f0f0f0"}}>
+            <img className="res-logo" alt="res-logo" src="https:/banner2.cleanpng.com/20180720/spp/956a15ac3b67af3b8619d9a8771d1399.webp" />
+            <h3>Meghana Foods</h3>
+            <h4>Biryani, North Indian, Asian</h4>
+            <h4>4.4 stars</h4>
+            <h4>38 mins</h4>
+        </div>
+    );
+};
+
++++++++++++++++++PROPS(dynamically data send ex: from APIS) data of card with resName and cuisine
+const RestaurantCard =(props)=>{         //using props
+    console.log(props);  //ll give us an obj - with resName and cuisine as properties
+    return(
+        <div className="res-card" style={{backgroundColor:"#f0f0f0"}}>
+            <img className="res-logo" alt="res-logo" src="https:/banner2.cleanpng.com/20180720/spp/956a15ac3b67af3b8619d9a8771d1399.webp" />
+            <h3>{props.resName}</h3>            //as its like passing JS object, can only be passed inside curly braces
+            <h4>{props.cuisine}</h4>
+            <h4>4.4 stars</h4>
+            <h4>38 mins</h4>
+        </div>
+    );
+};
+
+const Body =()=>{
+    return(
+        <div className="body">
+            <div className="search">Search</div>
+            <div className="res-container">
+                <RestaurantCard resName="Meghana Foods" cuisine="Biryani, North Indian, Asian"/> //passing in props
+            </div>
+        </div>
+    );
+};
+
+
++++++++Destructuring Props on the fly- JS concept
+const{resName, cuisine} = props;   //in JS
+
+const RestaurantCard =({resName, cuisine})=>{     //pass direct prop names inside curly braces
+   
+    return(
+        <div className="res-card" style={{backgroundColor:"#f0f0f0"}}>
+            <img className="res-logo" alt="res-logo" src="https:/banner2.cleanpng.com/20180720/spp/956a15ac3b67af3b8619d9a8771d1399.webp" />
+            <h3>{resName}</h3>  //using prop names  directly inside curly braces
+            <h4>{cuisine}</h4>
+            <h4>4.4 stars</h4>
+            <h4>38 mins</h4>
+        </div>
+    );
+};
