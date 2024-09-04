@@ -16,3 +16,24 @@ package.json
 
 
 2.
+i am trying to access public api of swiggy, but whenever i goto network tab after inspect element, my connection gets lost
+
+ChatGPT said:
+ChatGPT
+Accessing public APIs from services like Swiggy can be tricky, especially if they're not officially documented or intended for public use. Here's why you might be facing issues:
+
+Rate Limiting or Blocking: Swiggy's servers might detect unusual activity from your IP (like too many requests in a short time), leading to temporary blocking or rate limiting. This could cause your connection to drop.
+
+Security Measures: Many websites implement security measures like CAPTCHAs, token-based authentication, or IP blocking to prevent scraping or unauthorized access to their APIs. If these mechanisms detect suspicious activity, they might cut off your connection.
+
+Browser Behavior: Some browsers might disconnect or prevent connections to certain APIs or websites if they suspect any unauthorized activity. This could happen if you're trying to access the API in a way that doesn't match how the website intends it to be used.
+
+API Versioning or Deprecation: The API endpoint you're trying to access might be deprecated, or Swiggy may have changed their API structure, causing your request to fail.
+
+Possible Solutions:
+Check the API Documentation: If Swiggy offers a public API, check their official documentation to see if there are any guidelines or authentication methods required.
+Use a Proxy or VPN: If you suspect IP blocking, try using a different IP address by connecting through a proxy or VPN.
+Inspect API Calls via Official Apps: Sometimes, inspecting the network traffic of the official Swiggy app (using tools like Charles Proxy or Wireshark) can reveal how the API is being accessed and might give clues about headers, tokens, or other details you need.
+Respect Rate Limits: If you're making repeated requests, ensure you're staying within the limits to avoid getting blocked.
+Developer Console: Ensure you're not running into browser-specific issues by testing the API calls in an isolated environment like Postman or cURL.
+If you're still facing issues, you might need to consider alternative methods or tools to interact with the API or check if there's a specific reason (like a blocked IP) that causes the connection loss.
