@@ -13,3 +13,5 @@ Food Paradise React App
 //     Links
 //     Address
 //     Contact
+
+Note: Dont forget to use CORS plugin chrome as using Swiggy public api(to bypass CORS error)

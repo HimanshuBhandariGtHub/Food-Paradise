@@ -178,3 +178,173 @@ const arr= useState(resList); as useState returns an array
 const [listOfRestaurants, setListOfRestaurants] = arr; //sestructuring it on d fly
 const listOfRestaurants =arr[0];
 const setListOfRestaurants =arr[1];
+
+
+
++++++++++++++++++++exploring d world++++++++++++
+useEffect- things to be done after initial render, like here we want to re-render after shimmer ui
+
+useEffect(()=>{    //two args-cb function, dependency array
+    fetchData();
+}, []);
+
+const fetchData= async()=>{   //async await
+    const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING");
+    const json= await data.json();  //json format data
+    console.log(json);
+    setListOfRestaurants(json?.data?.cards[2]?.data?.data?.cards); //optional chaining in case anything breaks from json data hierarachy
+
+}
+
+
+
+shimmer fc:
+const Shimmer =()=>{
+    return <div className="shimmer-container">
+                <div className="shimmer-card"></div>
+                <div className="shimmer-card"></div>
+                <div className="shimmer-card"></div>
+            </div>
+}
+export default Shimmer;
+
+body.js
+
+import Shimmer from "./Shimmer";  //import
+
+
+if(listOfRestaurants.length=== 0){
+    return <Shimmer />;  //rendering d component also known as CONDITIONAL RENDERING
+}
+
+
+login-logout toggle:
+const[loginBtn, setLoginBtn] = useState("Login"); //useState with default val
+
+<button className="login" onClick={()=>{  //onClick
+                    loginBtn==="Logout"?  //ternary operator toggle if-else
+                    setLoginBtn("Logout"):setLoginBtn("Login");
+                }}>{loginBtn}</button> //render as js var - state var
+
+
+Search Functionality:
+
+import RestaurantCard from "./RestaurantCard";
+// import resList from "../../utils/mockData"; 
+import { useState, useEffect } from "react";
+import Shimmer from "./Shimmer";
+
+const Body =()=>{
+const [listOfRestaurants, setListOfRestaurants] = useState([]);
+const [filteredRestaurant, setFilteredRestaurant] =useState([]); //add state var for filteredList
+
+const [searchText, setSearchText] =useState(""); //state var for search text update
+
+useEffect(()=>{
+    fetchData();
+}, []);
+
+const fetchData= async()=>{
+    const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING");
+    const json= await data.json();
+    console.log(json);
+    setListOfRestaurants(json?.data?.cards[2]?.data?.data?.cards);
+    setFilteredRestaurant(json?.data?.cards[2]?.data?.data?.cards); //to fill filteredlist with default fetched data for search
+
+}
+
+    return listOfRestaurants.length===0? <Shimmer/>:(
+        <div className="body"> 
+            <div className="filter">
+                <div className="search">
+                    <input type="text" className="search-box" value={searchText} onChange={(e)=>{  //update state var with user text
+                        setSearchText(e.target.value);
+                    }} />
+                    <button onClick={()=>{
+                        const filteredRestaurant = listOfRestaurants.filter((res)=>res.data.name.toLowerCase().includes(searchText.toLowerCase()));
+                    }}>Search</button>  //toLower(case independent + filter method used to search restaurants tht include user search)
+                </div>
+                <button className="filterBtn" onClick={()=>{
+                const filteredList = listOfRestaurants.filter((res)=> res.info.avgRating>4.5);
+                setListOfRestaurants(filteredList);
+            }}>Top Rated Restaurants</button>
+            </div>
+            <div className="res-container">
+                {filteredRestaurant.map((restaurant)=>(   //display all filtered restaurant data only
+                    <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default Body;
+
+
+
++++++++++++api locate for correct card and cors plugin resolve +filter & topRated Functionality done+++
+import RestaurantCard from "./RestaurantCard";
+// import resList from "../../utils/mockData"; 
+import { useState, useEffect } from "react";
+import Shimmer from "./Shimmer";
+
+const Body =()=>{
+const [listOfRestaurants, setListOfRestaurants] = useState([]); //state var to keep full list to search or filter
+const [filteredRestaurant, setFilteredRestaurant] =useState([]);  //state var for filteredRes after search btn
+const [topRatedRestaurants, setTopRatedRestaurants] =useState([]); //state var for topRtaed after search btn
+
+const [searchText, setSearchText] =useState("");  //state var for searchText
+
+useEffect(()=>{  //here we want ro render after inital Shimmer UI render
+    fetchData();  //funtion call
+}, []);
+
+const fetchData= async()=>{  //funtion def- got swiggy public api from swiggy>inspect>network>fetch/xhr and to get jso, double click and json viewer chrome export
+    const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6217627&lng=77.0558233&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
+    const json= await data.json();
+    //always initialise our resList with full data to b avail while sorting again n again
+    setListOfRestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    //filteredRest initilaised full list to render on page n later after filter tht updated state is rendered
+    setFilteredRestaurant(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+
+}
+
+    return listOfRestaurants?.length===0 ? (<Shimmer/> ):( //ternary for shimmer as intial list is empty array then our rest doc
+        <div className="body"> 
+            <div className="filter">
+                <div className="search">
+                //updating our state var for search with e val
+                    <input type="text" className="search-box" value={searchText} onChange={(e)=>{
+                        setSearchText(e.target.value); 
+                    }} />
+                    //filter method applied on list and thn state var is updated with tht filterd list
+                    <button onClick={()=>{
+                        const filteredRestaurant = listOfRestaurants.filter((res)=>res.info.name.toLowerCase().includes(searchText.toLowerCase()));
+                        setFilteredRestaurant(filteredRestaurant);
+                        //as toprated after click will have some values, so again initialise it with 0 before search so, we have entire list again
+                        setTopRatedRestaurants([]);
+                    }}>Search</button>
+                </div>
+                <button className="filterBtn" onClick={()=>{ 
+                    //topRate filter from resList  and updateing the state var topRated
+                const topRatedRestaurants = listOfRestaurants.filter((res)=> res.info.avgRating>4.5);
+                setTopRatedRestaurants(topRatedRestaurants);
+            }}>Top Rated Restaurants</button>
+            </div>
+            <div className="res-container"> //use ternary operator if our topRatedRes has values then render tht else 
+            //render filteredList by search 
+                {topRatedRestaurants.length!==0 ?(
+                    topRatedRestaurants?.map((restaurant)=>(
+                        <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+                    )))
+                :
+                (filteredRestaurant?.map((restaurant)=>(
+                    <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+                )))
+                }
+            </div>
+        </div>
+    );
+};
+
+export default Body;
